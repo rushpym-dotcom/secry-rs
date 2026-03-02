@@ -1,0 +1,35 @@
+name: secry
+base: core22
+version: '1.1.7'
+summary: CLI de criptografia de tokens
+description: |
+ AES-256-GCM / ChaCha20-Poly1305 / XChaCha20-Poly1305 token encryption CLI
+  
+grade: stable
+confinement: strict
+
+apps:
+  secry:
+    command: secry
+  sec:
+    command: sec
+
+parts:
+  secry:
+    plugin: nil
+    source: .
+    override-build: |
+      set -e
+      TAG="v1.1.7"
+      ARCH="$(uname -m)"
+      case "$ARCH" in
+        x86_64) A="x86_64" ;;
+        aarch64) A="arm64" ;;
+        *) echo "unsupported arch: $ARCH"; exit 1 ;;
+      esac
+      URL="https://github.com/rushpym-dotcom/secry-rs/releases/download/$TAG/secry-$TAG-linux-$A.tar.gz"
+      curl -L "$URL" -o secry.tar.gz
+      tar -xzf secry.tar.gz
+      mkdir -p "$SNAPCRAFT_PART_INSTALL/bin"
+      cp secry-*/secry "$SNAPCRAFT_PART_INSTALL/bin/secry"
+      cp secry-*/sec "$SNAPCRAFT_PART_INSTALL/bin/sec"
