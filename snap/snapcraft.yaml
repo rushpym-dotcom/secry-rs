@@ -1,35 +1,35 @@
 name: secry
-base: core22
 version: '1.1.7'
-summary: CLI de criptografia de tokens
+summary: AES-256-GCM / ChaCha20-Poly1305 / XChaCha20-Poly1305 token encryption CLI
 description: |
- AES-256-GCM / ChaCha20-Poly1305 / XChaCha20-Poly1305 token encryption CLI
-  
+  secry is a token encryption CLI and library.
+  Supports AES-256-GCM, ChaCha20-Poly1305 and XChaCha20-Poly1305.
+  Features: encrypt/decrypt, seal (one-way), seal-enc (reversible with IP binding),
+  token inspection, password generation, fingerprint, and more.
+  Installs two binaries: secry and sec (alias).
+
 grade: stable
 confinement: strict
+base: core22
 
 apps:
   secry:
-    command: secry
+    command: bin/secry
+    plugs:
+      - network
+      - home
   sec:
-    command: sec
+    command: bin/secry
+    plugs:
+      - network
+      - home
 
 parts:
   secry:
-    plugin: nil
-    source: .
+    plugin: rust
+    source: https://github.com/rushpym-dotcom/secry-rs.git
+    source-tag: v1.1.7
+    rust-channel: stable
     override-build: |
-      set -e
-      TAG="v1.1.7"
-      ARCH="$(uname -m)"
-      case "$ARCH" in
-        x86_64) A="x86_64" ;;
-        aarch64) A="arm64" ;;
-        *) echo "unsupported arch: $ARCH"; exit 1 ;;
-      esac
-      URL="https://github.com/rushpym-dotcom/secry-rs/releases/download/$TAG/secry-$TAG-linux-$A.tar.gz"
-      curl -L "$URL" -o secry.tar.gz
-      tar -xzf secry.tar.gz
-      mkdir -p "$SNAPCRAFT_PART_INSTALL/bin"
-      cp secry-*/secry "$SNAPCRAFT_PART_INSTALL/bin/secry"
-      cp secry-*/sec "$SNAPCRAFT_PART_INSTALL/bin/sec"
+      craftctl default
+      install -Dm755 target/release/secry $CRAFT_PART_INSTALL/bin/secry
