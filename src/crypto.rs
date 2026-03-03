@@ -1,4 +1,4 @@
-use aes_gcm::{Aes256Gcm, KeyInit, aead::{Aead, Payload}};
+use aes_gcm::{Aes256Gcm, KeyInit, aead::Aead};
 use chacha20poly1305::{ChaCha20Poly1305, XChaCha20Poly1305};
 use rand::RngCore;
 use scrypt::{scrypt, Params};

@@ -5,7 +5,7 @@ const C: &str = "\x1b[36m";
 const H: &str = "\x1b[38;5;252m";
 const RED: &str = "\x1b[31m";
 
-pub fn section(name: &str) {
+pub fn section(_name: &str) {
     eprintln!();
 }
 
