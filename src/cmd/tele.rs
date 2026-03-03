@@ -1,4 +1,3 @@
-use crate::telemetry;
 use crate::ui;
 
 pub fn run(enable: bool, disable: bool) {
@@ -19,7 +18,15 @@ pub fn run(enable: bool, disable: bool) {
         }
         eprintln!("\n  \x1b[38;5;245m–\x1b[0m  Telemetry disabled\n");
     } else {
-        let status = if telemetry::is_enabled() {
+        let enabled = {
+            use std::fs;
+            dirs_next::config_dir()
+                .map(|d| d.join("secry").join("telemetry"))
+                .and_then(|p| fs::read_to_string(p).ok())
+                .map(|s| s.trim() == "1")
+                .unwrap_or(false)
+        };
+        let status = if enabled {
             "\x1b[32menabled\x1b[0m"
         } else {
             "\x1b[38;5;245mdisabled\x1b[0m"

@@ -105,7 +105,6 @@ enum Cmd {
 fn main() {
     let cli = Cli::parse();
 
-    // ask on first run (skip for telemetry command itself)
     match &cli.command {
         Cmd::Telemetry { .. } => {}
         _ => telemetry::maybe_ask(),
@@ -174,8 +173,7 @@ fn main() {
             cmd::changelog::run(search.as_deref(), tag.as_deref());
         }
         Cmd::Telemetry { enable, disable } => {
-        	    cmd::tele::run(enable, disable);
-        	    }
+            cmd::tele::run(enable, disable);
         }
     }
 }
