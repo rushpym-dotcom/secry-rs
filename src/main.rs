@@ -174,7 +174,8 @@ fn main() {
             cmd::changelog::run(search.as_deref(), tag.as_deref());
         }
         Cmd::Telemetry { enable, disable } => {
-            cmd::telemetry::run(enable, disable);
+        	    cmd::tele::run(enable, disable);
+        	    }
         }
     }
 }

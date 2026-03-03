@@ -1,3 +1,4 @@
+use crate::telemetry;
 use crate::ui;
 
 pub fn run(enable: bool, disable: bool) {
@@ -18,7 +19,7 @@ pub fn run(enable: bool, disable: bool) {
         }
         eprintln!("\n  \x1b[38;5;245m–\x1b[0m  Telemetry disabled\n");
     } else {
-        let status = if crate::telemetry::is_enabled() {
+        let status = if telemetry::is_enabled() {
             "\x1b[32menabled\x1b[0m"
         } else {
             "\x1b[38;5;245mdisabled\x1b[0m"

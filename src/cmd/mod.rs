@@ -9,4 +9,4 @@ pub mod example;
 pub mod upgrade;
 pub mod changelog;
 pub mod sei;
-pub mod telemetry;
+pub mod tele;
