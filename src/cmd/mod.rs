@@ -7,6 +7,6 @@ pub mod seal;
 pub mod info;
 pub mod example;
 pub mod upgrade;
-pub mod changelog;
 pub mod sei;
 pub mod tele;
+pub mod analysis;

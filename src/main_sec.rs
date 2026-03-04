@@ -172,8 +172,6 @@ fn main() {
             cmd::upgrade::run();
         }
         Cmd::Changelog { search, tag } => {
-            telemetry::track("changelog");
-            cmd::changelog::run(search.as_deref(), tag.as_deref());
         }
         Cmd::Telemetry { enable, disable } => {
             cmd::tele::run(enable, disable);
