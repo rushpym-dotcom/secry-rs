@@ -99,6 +99,7 @@ enum Cmd {
         #[arg(long)] search: Option<String>,
         #[arg(long)] tag:    Option<String>,
     },
+    Analysis,
     Telemetry {
         #[arg(long)] enable:  bool,
         #[arg(long)] disable: bool,
@@ -109,7 +110,7 @@ fn main() {
     let cli = Cli::parse();
 
     match &cli.command {
-        Cmd::Telemetry { .. } => {}
+        Cmd::Telemetry { .. } | Cmd::Analysis => {}
         _ => telemetry::maybe_ask(),
     }
 
@@ -172,6 +173,9 @@ fn main() {
             cmd::upgrade::run();
         }
         Cmd::Changelog { search, tag } => {
+        }
+        Cmd::Analysis => {
+            cmd::analysis::run();
         }
         Cmd::Telemetry { enable, disable } => {
             cmd::tele::run(enable, disable);
