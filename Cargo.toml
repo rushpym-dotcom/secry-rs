@@ -1,6 +1,6 @@
 [package]
 name        = "secry"
-version     = "1.2.2"
+version     = "1.2.3"
 edition     = "2021"
 description = "AES-256-GCM / ChaCha20-Poly1305 / XChaCha20-Poly1305 token encryption CLI"
 license     = "MIT"

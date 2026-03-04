@@ -112,7 +112,7 @@ fn main() {
     let cli = Cli::parse();
 
     match &cli.command {
-        Cmd::Telemetry { .. } | Cmd::Analysis => {}
+        Cmd::Telemetry { .. } | Cmd::Analysis { .. } => {}
         _ => telemetry::maybe_ask(),
     }
 
@@ -176,8 +176,8 @@ fn main() {
         }
         Cmd::Changelog { search, tag } => {
         }
-        Cmd::Analysis => {
-            cmd::analysis::run();
+        Cmd::Analysis { setup } => {
+            cmd::analysis::run(setup);
         }
         Cmd::Telemetry { enable, disable } => {
             cmd::tele::run(enable, disable);
