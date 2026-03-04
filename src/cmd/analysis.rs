@@ -18,12 +18,6 @@ fn adm_path() -> std::path::PathBuf {
         .join(".adm")
 }
 
-fn hash_pw(pw: &str) -> String {
-    use sha2::Digest;
-    let hash = sha2::Sha256::digest(pw.as_bytes());
-    hash.iter().fold(String::new(), |mut s, b| { use std::fmt::Write; let _ = write!(s, "{:02x}", b); s })
-}
-
 fn setup_password() {
     let pw1 = rpassword::prompt_password("  new admin password: ").unwrap_or_default();
     if pw1.len() < 4 {
@@ -35,14 +29,24 @@ fn setup_password() {
         eprintln!("\n  \x1b[31m✘\x1b[0m  passwords don't match\n");
         std::process::exit(1);
     }
+    let hash = bcrypt::hash(&pw1, bcrypt::DEFAULT_COST).unwrap_or_else(|_| {
+        eprintln!("\n  \x1b[31m✘\x1b[0m  failed to hash password\n");
+        std::process::exit(1);
+    });
     let path = adm_path();
     if let Some(parent) = path.parent() {
         let _ = std::fs::create_dir_all(parent);
     }
-    std::fs::write(&path, hash_pw(&pw1)).unwrap_or_else(|_| {
+    std::fs::write(&path, &hash).unwrap_or_else(|_| {
         eprintln!("\n  \x1b[31m✘\x1b[0m  failed to save password\n");
         std::process::exit(1);
     });
+    // restrict permissions
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let _ = std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o600));
+    }
     eprintln!("\n  \x1b[32m✔\x1b[0m  admin password set\n");
 }
 
@@ -55,7 +59,7 @@ fn verify_password() -> bool {
     let stored = std::fs::read_to_string(&path).unwrap_or_default();
     let stored  = stored.trim();
     let pw = rpassword::prompt_password("  admin password: ").unwrap_or_default();
-    hash_pw(&pw) == stored
+    bcrypt::verify(&pw, stored).unwrap_or(false)
 }
 
 fn fetch_events() -> Vec<Event> {
