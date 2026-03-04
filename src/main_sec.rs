@@ -99,7 +99,9 @@ enum Cmd {
         #[arg(long)] search: Option<String>,
         #[arg(long)] tag:    Option<String>,
     },
-    Analysis,
+    Analysis {
+        #[arg(long, short = 's')] setup: bool,
+    },
     Telemetry {
         #[arg(long)] enable:  bool,
         #[arg(long)] disable: bool,
